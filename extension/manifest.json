@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Form Automation Assistant",
+  "version": "1.0.0",
+  "description": "Type text from Form Automation Assistant into any website form field",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "externally_connectable": {
+    "matches": ["http://localhost:*", "https://localhost:*", "*://*.lovable.app/*"]
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Form Automation Assistant"
+  }
+}

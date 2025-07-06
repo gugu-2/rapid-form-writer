@@ -1,16 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import TextInputArea from '@/components/TextInputArea';
 import TypingSimulation from '@/components/TypingSimulation';
 import AutomationStats from '@/components/AutomationStats';
+import ExtensionDetector from '@/components/ExtensionDetector';
+import AutomationController from '@/components/AutomationController';
 import { Bot, Keyboard, Globe, ArrowRight } from 'lucide-react';
+import { extensionMessaging } from '@/utils/extensionMessaging';
 import heroImage from '@/assets/hero-automation.jpg';
 
 const Index = () => {
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [typingSpeed, setTypingSpeed] = useState(50);
+  const [isExtensionInstalled, setIsExtensionInstalled] = useState(false);
+
+  useEffect(() => {
+    checkExtension();
+  }, []);
+
+  const checkExtension = async () => {
+    try {
+      const installed = await extensionMessaging.checkExtensionInstalled();
+      setIsExtensionInstalled(installed);
+    } catch (error) {
+      setIsExtensionInstalled(false);
+    }
+  };
 
   const handleStartTyping = () => {
     setIsTyping(true);
@@ -69,6 +86,9 @@ const Index = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 pb-12">
         <div className="space-y-8">
+          {/* Extension Status */}
+          <ExtensionDetector />
+
           {/* Stats Row */}
           <AutomationStats 
             textLength={inputText.length}
@@ -113,6 +133,13 @@ const Index = () => {
               />
             </div>
           </div>
+
+          {/* Cross-Website Automation */}
+          <AutomationController 
+            text={inputText}
+            speed={typingSpeed}
+            isExtensionInstalled={isExtensionInstalled}
+          />
 
           {/* Integration Guide */}
           <Card className="p-8 bg-gradient-card border border-primary/20">
